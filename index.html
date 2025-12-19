@@ -1,24 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Cherish Addis Coffee & Books | Cozy Café in 4 Kilo, Addis Ababa</title>
+    <meta name="title" content="Cherish Addis Coffee & Books | Cozy Café in 4 Kilo, Addis Ababa" />
+    <meta name="description" content="A quiet space for coffee, books, and meaningful moments. Traditional Ethiopian coffee, delicious food, and a peaceful reading atmosphere behind Abrehot Library in 4 Kilo, Addis Ababa." />
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://cherishaddis.com/" />
+    <meta property="og:title" content="Cherish Addis Coffee & Books | Cozy Café in Addis Ababa" />
+    <meta property="og:description" content="A quiet space for coffee, books, and meaningful moments. Traditional Ethiopian coffee and a peaceful reading atmosphere in 4 Kilo." />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://cherishaddis.com/" />
+    <meta property="twitter:title" content="Cherish Addis Coffee & Books" />
+    <meta property="twitter:description" content="A quiet space for coffee, books, and meaningful moments in Addis Ababa." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://cherishaddis.com/" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1a1412" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CafeOrCoffeeShop",
+      "name": "Cherish Addis Coffee & Books",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Behind Abrehot Library, 4 Kilo",
+        "addressLocality": "Addis Ababa",
+        "addressCountry": "ET"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 9.035,
+        "longitude": 38.76
+      },
+      "url": "https://cherishaddis.com",
+      "telephone": "+251927957171",
+      "email": "cherchiscafeandbook@gmail.com",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "07:00",
+          "closes": "21:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "07:00",
+          "closes": "17:00"
+        }
+      ],
+      "priceRange": "$$",
+      "servesCuisine": ["Ethiopian", "Coffee", "Breakfast"],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "48"
+      }
+    }
+    </script>
   </head>
-
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
