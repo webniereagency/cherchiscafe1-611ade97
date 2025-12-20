@@ -3,35 +3,37 @@ import { useRef } from 'react';
 import { Coffee, BookOpen, Sun, Moon } from 'lucide-react';
 import cafeInterior2 from '@/assets/cafe-interior-2.png';
 import wafflesWindow from '@/assets/waffles-window.png';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const Atmosphere = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { t } = useLanguage();
 
   const experiences = [
     {
       icon: Sun,
-      time: "Morning",
-      title: "Quiet Beginnings",
-      description: "Start your day with traditional Ethiopian coffee and the soft rustle of pages. The morning light filters through our windows as students and early risers find their focus."
+      timeKey: "atmosphere.morningTime",
+      titleKey: "atmosphere.morning",
+      descriptionKey: "atmosphere.morningDesc"
     },
     {
       icon: Coffee,
-      time: "Afternoon",
-      title: "Creative Flow",
-      description: "The café hums with quiet productivity. Laptops open, notebooks fill, and our specialty drinks fuel the afternoon's work. Perfect for studying or remote work."
+      timeKey: "atmosphere.afternoonTime",
+      titleKey: "atmosphere.afternoon",
+      descriptionKey: "atmosphere.afternoonDesc"
     },
     {
       icon: BookOpen,
-      time: "Evening",
-      title: "Winding Down",
-      description: "As the city slows, conversations deepen. Friends gather over pastries, couples share quiet moments, and the day's stories find their endings."
+      timeKey: "atmosphere.eveningTime",
+      titleKey: "atmosphere.evening",
+      descriptionKey: "atmosphere.eveningDesc"
     },
     {
       icon: Moon,
-      time: "Weekend",
-      title: "Cherished Moments",
-      description: "Weekend brunches extend into lazy afternoons. Browse our book collection, try our signature waffles, and let time move at its own pace."
+      timeKey: "atmosphere.weekendTime",
+      titleKey: "atmosphere.weekend",
+      descriptionKey: "atmosphere.weekendDesc"
     }
   ];
 
@@ -45,14 +47,14 @@ const Atmosphere = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <span className="text-sm uppercase tracking-[0.2em] text-primary">Experience</span>
+          <span className="text-sm uppercase tracking-[0.2em] text-primary">{t('atmosphere.label')}</span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mt-4 mb-6">
-            The Rhythm of
-            <span className="text-primary italic"> Our Days</span>
+            {t('atmosphere.title')}
+            <span className="text-primary italic"> {t('atmosphere.titleHighlight')}</span>
           </h2>
           <div className="accent-line mb-6" />
           <p className="text-muted-foreground">
-            Every hour at Cherish Addis has its own character. Discover your perfect moment.
+            {t('atmosphere.description')}
           </p>
         </motion.div>
 
@@ -71,8 +73,8 @@ const Atmosphere = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
             <div className="absolute bottom-6 left-6">
-              <p className="text-sm uppercase tracking-wider text-primary">Daily Life</p>
-              <p className="font-serif text-xl text-foreground">Where conversations flow</p>
+              <p className="text-sm uppercase tracking-wider text-primary">{t('atmosphere.dailyLife')}</p>
+              <p className="font-serif text-xl text-foreground">{t('atmosphere.conversations')}</p>
             </div>
           </motion.div>
 
@@ -89,8 +91,8 @@ const Atmosphere = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
             <div className="absolute bottom-6 left-6">
-              <p className="text-sm uppercase tracking-wider text-primary">Evening Bliss</p>
-              <p className="font-serif text-xl text-foreground">Sweet endings to your day</p>
+              <p className="text-sm uppercase tracking-wider text-primary">{t('atmosphere.eveningBliss')}</p>
+              <p className="font-serif text-xl text-foreground">{t('atmosphere.sweetEndings')}</p>
             </div>
           </motion.div>
         </div>
@@ -99,7 +101,7 @@ const Atmosphere = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {experiences.map((exp, index) => (
             <motion.div
-              key={exp.time}
+              key={exp.titleKey}
               className="glass-card p-6 rounded-xl"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -108,9 +110,9 @@ const Atmosphere = () => {
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                 <exp.icon className="w-5 h-5 text-primary" />
               </div>
-              <p className="text-xs uppercase tracking-wider text-primary mb-1">{exp.time}</p>
-              <h3 className="font-serif text-xl mb-3">{exp.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{exp.description}</p>
+              <p className="text-xs uppercase tracking-wider text-primary mb-1">{t(exp.timeKey)}</p>
+              <h3 className="font-serif text-xl mb-3">{t(exp.titleKey)}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t(exp.descriptionKey)}</p>
             </motion.div>
           ))}
         </div>

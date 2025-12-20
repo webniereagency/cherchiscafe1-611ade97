@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import cafeInterior from '@/assets/cafe-interior-1.png';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface HeroProps {
   onExploreMenu: () => void;
@@ -7,6 +8,8 @@ interface HeroProps {
 }
 
 const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -34,7 +37,7 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            Coffee & Books in Addis Ababa
+            {t('hero.subtitle')}
           </motion.p>
 
           {/* Main Title */}
@@ -44,9 +47,9 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
-            <span className="block">Cherish Addis</span>
+            <span className="block">{t('hero.title')}</span>
             <span className="block text-primary text-3xl md:text-4xl lg:text-5xl mt-2 font-normal italic">
-              Coffee & Books
+              {t('hero.subtitle')}
             </span>
           </motion.h1>
 
@@ -65,9 +68,7 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.6 }}
           >
-            A quiet space for coffee, books, and meaningful moments.
-            <br className="hidden md:block" />
-            Behind Abrehot Library, 4 Kilo.
+            {t('hero.tagline')}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -81,13 +82,13 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
               onClick={onExploreMenu}
               className="btn-primary"
             >
-              Explore Menu
+              {t('hero.exploreMenu')}
             </button>
             <button
               onClick={onOrderAhead}
               className="btn-outline"
             >
-              Order Ahead
+              {t('hero.orderAhead')}
             </button>
           </motion.div>
         </motion.div>

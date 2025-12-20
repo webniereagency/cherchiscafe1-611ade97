@@ -2,10 +2,12 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import ethiopianCoffee from '@/assets/ethiopian-coffee.png';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { t } = useLanguage();
 
   return (
     <section id="about" className="py-24 md:py-32 bg-background" ref={ref}>
@@ -35,7 +37,7 @@ const About = () => {
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <p className="font-serif text-3xl md:text-4xl text-primary font-medium">4.8</p>
+              <p className="font-serif text-3xl md:text-4xl text-primary font-medium">{t('about.rating')}</p>
               <div className="flex gap-1 mt-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <svg
@@ -48,7 +50,7 @@ const About = () => {
                   </svg>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-2">48 Google Reviews</p>
+              <p className="text-xs text-muted-foreground mt-2">{t('about.ratingText')}</p>
             </motion.div>
           </motion.div>
 
@@ -58,47 +60,35 @@ const About = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="text-sm uppercase tracking-[0.2em] text-primary">About Us</span>
+            <span className="text-sm uppercase tracking-[0.2em] text-primary">{t('about.label')}</span>
             
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mt-4 mb-6">
-              Where Books Meet
-              <span className="block text-primary italic">Ethiopian Coffee</span>
+              {t('about.title')}
+              <span className="block text-primary italic">{t('about.titleHighlight')}</span>
             </h2>
 
             <div className="space-y-6 text-muted-foreground leading-relaxed">
-              <p>
-                Tucked away behind Abrehot Library in 4 Kilo, Cherish Addis is more than a café—it's 
-                a sanctuary for thinkers, readers, and coffee lovers who appreciate the art of slowing down.
-              </p>
-              
-              <p>
-                Our space is designed for those who understand that a good book deserves a perfect cup 
-                of Ethiopian coffee. The shelves are filled with stories, the tables with conversation, 
-                and the air with the rich aroma of freshly roasted beans.
-              </p>
-
-              <p>
-                Whether you're a student seeking focus, a professional needing quiet, or simply someone 
-                who cherishes calm moments—you'll find your place here.
-              </p>
+              <p>{t('about.p1')}</p>
+              <p>{t('about.p2')}</p>
+              <p>{t('about.p3')}</p>
             </div>
 
             {/* Features */}
             <div className="grid grid-cols-2 gap-6 mt-10">
               {[
-                { label: 'Book Collection', value: 'Growing Library' },
-                { label: 'Coffee Beans', value: 'Locally Sourced' },
-                { label: 'Atmosphere', value: 'Calm & Focused' },
-                { label: 'Location', value: 'Near Abrehot' },
+                { labelKey: 'about.featureBooks', valueKey: 'about.featureBooksValue' },
+                { labelKey: 'about.featureCoffee', valueKey: 'about.featureCoffeeValue' },
+                { labelKey: 'about.featureAtmosphere', valueKey: 'about.featureAtmosphereValue' },
+                { labelKey: 'about.featureLocation', valueKey: 'about.featureLocationValue' },
               ].map((item, i) => (
                 <motion.div
-                  key={item.label}
+                  key={item.labelKey}
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
                 >
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">{item.label}</p>
-                  <p className="font-serif text-lg text-foreground mt-1">{item.value}</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">{t(item.labelKey)}</p>
+                  <p className="font-serif text-lg text-foreground mt-1">{t(item.valueKey)}</p>
                 </motion.div>
               ))}
             </div>

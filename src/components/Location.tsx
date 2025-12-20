@@ -1,10 +1,12 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { MapPin, Clock, Phone, Navigation } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const Location = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { t } = useLanguage();
 
   const openGoogleMaps = () => {
     window.open('https://maps.google.com/?q=Cherish+Addis+Coffee+%26+Books+4+Kilo+Addis+Ababa', '_blank');
@@ -20,14 +22,14 @@ const Location = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <span className="text-sm uppercase tracking-[0.2em] text-primary">Find Us</span>
+          <span className="text-sm uppercase tracking-[0.2em] text-primary">{t('location.label')}</span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mt-4 mb-6">
-            Visit
-            <span className="text-primary italic"> Cherish Addis</span>
+            {t('location.title')}
+            <span className="text-primary italic"> {t('location.titleHighlight')}</span>
           </h2>
           <div className="accent-line mb-6" />
           <p className="text-muted-foreground">
-            We're located behind Abrehot Library in 4 Kilo—Ethiopia's knowledge district.
+            {t('location.description')}
           </p>
         </motion.div>
 
@@ -67,14 +69,12 @@ const Location = () => {
                   <MapPin className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl mb-2">Address</h3>
+                  <h3 className="font-serif text-xl mb-2">{t('location.address')}</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Behind Abrehot Library<br />
-                    4 Kilo, Addis Ababa<br />
-                    Ethiopia
+                    {t('location.addressText')}
                   </p>
                   <p className="text-sm text-primary mt-3">
-                    ★ Just steps from Ethiopia's largest public library
+                    ★ {t('location.nearLibrary')}
                   </p>
                 </div>
               </div>
@@ -87,15 +87,15 @@ const Location = () => {
                   <Clock className="w-5 h-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-serif text-xl mb-4">Opening Hours</h3>
+                  <h3 className="font-serif text-xl mb-4">{t('location.hours')}</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Monday – Saturday</span>
-                      <span className="font-medium">07:00 AM – 09:00 PM</span>
+                      <span className="text-muted-foreground">{t('location.monSat')}</span>
+                      <span className="font-medium">{t('location.monSatTime')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Sunday</span>
-                      <span className="font-medium">07:00 AM – 05:00 PM</span>
+                      <span className="text-muted-foreground">{t('location.sunday')}</span>
+                      <span className="font-medium">{t('location.sundayTime')}</span>
                     </div>
                   </div>
                 </div>
@@ -109,7 +109,7 @@ const Location = () => {
                   <Phone className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl mb-2">Get in Touch</h3>
+                  <h3 className="font-serif text-xl mb-2">{t('location.phone')}</h3>
                   <a 
                     href="tel:+251927957171" 
                     className="text-lg hover:text-primary transition-colors"
@@ -117,7 +117,7 @@ const Location = () => {
                     +251 92 795 7171
                   </a>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Call or WhatsApp
+                    {t('location.callOrWhatsApp')}
                   </p>
                 </div>
               </div>
@@ -129,7 +129,7 @@ const Location = () => {
               className="w-full btn-primary flex items-center justify-center gap-2"
             >
               <Navigation className="w-4 h-4" />
-              Get Directions
+              {t('location.getDirections')}
             </button>
           </motion.div>
         </div>

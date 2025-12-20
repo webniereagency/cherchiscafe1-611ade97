@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, ShoppingBag, Clock, User, Mail, Phone, MessageSquare } from 'lucide-react';
 import { MenuItem } from './Menu';
 import { toast } from '@/hooks/use-toast';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface OrderItem extends MenuItem {
   quantity: number;
@@ -19,6 +20,7 @@ interface OrderSystemProps {
 const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }: OrderSystemProps) => {
   const [step, setStep] = useState<'cart' | 'details' | 'confirmation'>('cart');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -52,8 +54,8 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
     setIsSubmitting(false);
     
     toast({
-      title: "Order Received!",
-      description: "We'll prepare your order with care.",
+      title: t('order.confirmed'),
+      description: t('order.confirmedDesc'),
     });
   };
 
@@ -104,14 +106,14 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
           <div className="p-6 border-b border-border flex items-center justify-between">
             <div>
               <h2 className="font-serif text-2xl">
-                {step === 'cart' && 'Your Order'}
-                {step === 'details' && 'Complete Your Order'}
-                {step === 'confirmation' && 'Order Confirmed'}
+                {step === 'cart' && t('order.title')}
+                {step === 'details' && t('order.yourDetails')}
+                {step === 'confirmation' && t('order.confirmed')}
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                {step === 'cart' && `${consolidatedItems.length} item${consolidatedItems.length !== 1 ? 's' : ''}`}
-                {step === 'details' && 'Fill in your details below'}
-                {step === 'confirmation' && 'Thank you for your order'}
+                {step === 'cart' && `${consolidatedItems.length} ${t('order.items')}`}
+                {step === 'details' && t('order.fillDetails')}
+                {step === 'confirmation' && t('order.thankYou')}
               </p>
             </div>
             <button
@@ -129,6 +131,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                 items={consolidatedItems}
                 onRemove={onRemoveItem}
                 onClear={onClearOrder}
+                t={t}
               />
             )}
 
@@ -139,6 +142,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                 items={consolidatedItems}
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
+                t={t}
               />
             )}
 
@@ -147,6 +151,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                 items={consolidatedItems}
                 formData={formData}
                 total={totalPrice}
+                t={t}
               />
             )}
           </div>
@@ -156,15 +161,15 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
             {step === 'cart' && (
               <div className="space-y-4">
                 <div className="flex justify-between text-lg">
-                  <span>Total</span>
-                  <span className="font-medium text-accent">{totalPrice} ETB</span>
+                  <span>{t('order.total')}</span>
+                  <span className="font-medium text-accent">{totalPrice} {t('menu.etb')}</span>
                 </div>
                 <button
                   onClick={() => setStep('details')}
                   disabled={consolidatedItems.length === 0}
                   className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Continue to Details
+                  {t('order.continueDetails')}
                 </button>
               </div>
             )}
@@ -175,7 +180,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                   onClick={() => setStep('cart')}
                   className="flex-1 btn-outline"
                 >
-                  Back
+                  {t('order.back')}
                 </button>
                 <button
                   form="order-form"
@@ -183,7 +188,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                   disabled={isSubmitting}
                   className="flex-1 btn-primary disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Submitting...' : `Place Order — ${totalPrice} ETB`}
+                  {isSubmitting ? t('order.submitting') : `${t('order.placeOrder')} — ${totalPrice} ${t('menu.etb')}`}
                 </button>
               </div>
             )}
@@ -193,7 +198,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                 onClick={resetOrder}
                 className="w-full btn-primary"
               >
-                Done
+                {t('order.close')}
               </button>
             )}
           </div>
@@ -207,18 +212,20 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
 const CartStep = ({ 
   items, 
   onRemove,
-  onClear
+  onClear,
+  t
 }: { 
   items: OrderItem[]; 
   onRemove: (id: string) => void;
   onClear: () => void;
+  t: (key: string) => string;
 }) => {
   if (items.length === 0) {
     return (
       <div className="text-center py-12">
         <ShoppingBag className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
-        <p className="text-lg text-muted-foreground">Your order is empty</p>
-        <p className="text-sm text-muted-foreground mt-2">Browse our menu to add items</p>
+        <p className="text-lg text-muted-foreground">{t('order.empty')}</p>
+        <p className="text-sm text-muted-foreground mt-2">{t('order.emptyDesc')}</p>
       </div>
     );
   }
@@ -242,10 +249,10 @@ const CartStep = ({
           <div className="flex-1">
             <h4 className="font-medium">{item.name}</h4>
             <p className="text-sm text-muted-foreground">
-              {item.quantity} × {item.price} ETB
+              {item.quantity} × {item.price} {t('menu.etb')}
             </p>
           </div>
-          <p className="font-medium text-accent">{item.price * item.quantity} ETB</p>
+          <p className="font-medium text-accent">{item.price * item.quantity} {t('menu.etb')}</p>
           <button
             onClick={() => onRemove(item.id)}
             className="w-8 h-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center hover:bg-destructive/20 transition-colors"
@@ -260,7 +267,7 @@ const CartStep = ({
           onClick={onClear}
           className="text-sm text-muted-foreground hover:text-destructive transition-colors"
         >
-          Clear all items
+          {t('order.clearAll')}
         </button>
       )}
     </div>
@@ -273,24 +280,26 @@ const DetailsStep = ({
   setFormData, 
   items,
   onSubmit,
-  isSubmitting
+  isSubmitting,
+  t
 }: { 
   formData: any; 
   setFormData: (data: any) => void;
   items: OrderItem[];
   onSubmit: (e: React.FormEvent) => void;
   isSubmitting: boolean;
+  t: (key: string) => string;
 }) => {
   return (
     <form id="order-form" onSubmit={onSubmit} className="space-y-6">
       {/* Order Summary */}
       <div className="p-4 bg-secondary/30 rounded-xl">
-        <p className="text-sm text-muted-foreground mb-3">Order Summary</p>
+        <p className="text-sm text-muted-foreground mb-3">{t('order.orderSummary')}</p>
         <div className="space-y-2">
           {items.map((item) => (
             <div key={item.id} className="flex justify-between text-sm">
               <span>{item.quantity}× {item.name}</span>
-              <span>{item.price * item.quantity} ETB</span>
+              <span>{item.price * item.quantity} {t('menu.etb')}</span>
             </div>
           ))}
         </div>
@@ -301,7 +310,7 @@ const DetailsStep = ({
         <div>
           <label className="flex items-center gap-2 text-sm mb-2">
             <User className="w-4 h-4 text-muted-foreground" />
-            Your Name
+            {t('order.name')}
           </label>
           <input
             type="text"
@@ -309,14 +318,14 @@ const DetailsStep = ({
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="input-field"
-            placeholder="Enter your name"
+            placeholder={t('order.namePlaceholder')}
           />
         </div>
 
         <div>
           <label className="flex items-center gap-2 text-sm mb-2">
             <Mail className="w-4 h-4 text-muted-foreground" />
-            Email
+            {t('order.email')}
           </label>
           <input
             type="email"
@@ -324,14 +333,14 @@ const DetailsStep = ({
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="input-field"
-            placeholder="your@email.com"
+            placeholder={t('order.emailPlaceholder')}
           />
         </div>
 
         <div>
           <label className="flex items-center gap-2 text-sm mb-2">
             <Phone className="w-4 h-4 text-muted-foreground" />
-            Phone Number
+            {t('order.phone')}
           </label>
           <input
             type="tel"
@@ -339,7 +348,7 @@ const DetailsStep = ({
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="input-field"
-            placeholder="+251 9X XXX XXXX"
+            placeholder={t('order.phonePlaceholder')}
           />
         </div>
 
@@ -347,7 +356,7 @@ const DetailsStep = ({
         <div>
           <label className="flex items-center gap-2 text-sm mb-3">
             <Clock className="w-4 h-4 text-muted-foreground" />
-            Order Type
+            {t('order.orderType')}
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
@@ -359,8 +368,8 @@ const DetailsStep = ({
                   : 'border-border hover:border-primary/50'
               }`}
             >
-              <p className="font-medium">Dine-in Now</p>
-              <p className="text-xs text-muted-foreground mt-1">Ready when you arrive</p>
+              <p className="font-medium">{t('order.dineIn')}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t('order.dineInDesc')}</p>
             </button>
             <button
               type="button"
@@ -371,15 +380,15 @@ const DetailsStep = ({
                   : 'border-border hover:border-primary/50'
               }`}
             >
-              <p className="font-medium">Order Ahead</p>
-              <p className="text-xs text-muted-foreground mt-1">Pick a time</p>
+              <p className="font-medium">{t('order.orderAhead')}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t('order.orderAheadDesc')}</p>
             </button>
           </div>
         </div>
 
         {formData.orderType === 'order-ahead' && (
           <div>
-            <label className="text-sm mb-2 block">Preferred Time</label>
+            <label className="text-sm mb-2 block">{t('order.preferredTime')}</label>
             <input
               type="time"
               required={formData.orderType === 'order-ahead'}
@@ -393,13 +402,13 @@ const DetailsStep = ({
         <div>
           <label className="flex items-center gap-2 text-sm mb-2">
             <MessageSquare className="w-4 h-4 text-muted-foreground" />
-            Special Notes (optional)
+            {t('order.specialNotes')}
           </label>
           <textarea
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             className="input-field min-h-[80px] resize-none"
-            placeholder="Any special requests or dietary requirements..."
+            placeholder={t('order.notesPlaceholder')}
           />
         </div>
       </div>
@@ -411,11 +420,13 @@ const DetailsStep = ({
 const ConfirmationStep = ({ 
   items, 
   formData, 
-  total 
+  total,
+  t
 }: { 
   items: OrderItem[]; 
   formData: any;
   total: number;
+  t: (key: string) => string;
 }) => {
   return (
     <div className="text-center">
@@ -430,40 +441,40 @@ const ConfirmationStep = ({
         </svg>
       </motion.div>
 
-      <h3 className="font-serif text-2xl mb-2">Thank You, {formData.name}!</h3>
+      <h3 className="font-serif text-2xl mb-2">{t('order.thankYouName')}, {formData.name}!</h3>
       <p className="text-muted-foreground mb-8">
-        Your order has been received. We'll prepare it with care.
+        {t('order.confirmedDesc')}
       </p>
 
       <div className="text-left p-6 bg-secondary/30 rounded-xl">
-        <p className="text-sm text-muted-foreground mb-4">Order Details</p>
+        <p className="text-sm text-muted-foreground mb-4">{t('order.orderDetails')}</p>
         
         <div className="space-y-3">
           {items.map((item) => (
             <div key={item.id} className="flex justify-between">
               <span>{item.quantity}× {item.name}</span>
-              <span className="text-muted-foreground">{item.price * item.quantity} ETB</span>
+              <span className="text-muted-foreground">{item.price * item.quantity} {t('menu.etb')}</span>
             </div>
           ))}
           <div className="border-t border-border pt-3 mt-3 flex justify-between font-medium">
-            <span>Total</span>
-            <span className="text-accent">{total} ETB</span>
+            <span>{t('order.total')}</span>
+            <span className="text-accent">{total} {t('menu.etb')}</span>
           </div>
         </div>
 
         <div className="mt-6 pt-6 border-t border-border space-y-2 text-sm">
-          <p><span className="text-muted-foreground">Type:</span> {formData.orderType === 'dine-in' ? 'Dine-in' : 'Order Ahead'}</p>
+          <p><span className="text-muted-foreground">{t('order.type')}:</span> {formData.orderType === 'dine-in' ? t('order.dineIn') : t('order.orderAhead')}</p>
           {formData.preferredTime && (
-            <p><span className="text-muted-foreground">Time:</span> {formData.preferredTime}</p>
+            <p><span className="text-muted-foreground">{t('order.time')}:</span> {formData.preferredTime}</p>
           )}
           {formData.notes && (
-            <p><span className="text-muted-foreground">Notes:</span> {formData.notes}</p>
+            <p><span className="text-muted-foreground">{t('order.notes')}:</span> {formData.notes}</p>
           )}
         </div>
       </div>
 
       <p className="text-sm text-muted-foreground mt-6">
-        A confirmation has been sent to {formData.email}
+        {t('order.confirmationSent')} {formData.email}
       </p>
     </div>
   );

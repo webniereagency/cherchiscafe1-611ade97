@@ -2,10 +2,12 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Send, Phone, Mail, MessageCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -21,8 +23,8 @@ const Contact = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast({
-      title: "Message Sent",
-      description: "We'll get back to you soon!",
+      title: t('contact.messageSent'),
+      description: t('contact.messageSuccess'),
     });
     
     setFormData({ name: '', email: '', message: '' });
@@ -43,14 +45,13 @@ const Contact = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-sm uppercase tracking-[0.2em] text-primary">Contact</span>
+            <span className="text-sm uppercase tracking-[0.2em] text-primary">{t('contact.label')}</span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mt-4 mb-6">
-              Let's Start a
-              <span className="text-primary italic"> Conversation</span>
+              {t('contact.title')}
+              <span className="text-primary italic"> {t('contact.titleHighlight')}</span>
             </h2>
             <p className="text-muted-foreground mb-10 leading-relaxed">
-              Whether you have questions, feedback, or just want to say hello—we'd love to hear from you. 
-              Reach out and let's connect over coffee.
+              {t('contact.description')}
             </p>
 
             <div className="space-y-6">
@@ -63,7 +64,7 @@ const Contact = () => {
                   <Phone className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Phone / WhatsApp</p>
+                  <p className="text-sm text-muted-foreground">{t('contact.callUs')}</p>
                   <p className="font-medium group-hover:text-primary transition-colors">+251 92 795 7171</p>
                 </div>
               </a>
@@ -77,7 +78,7 @@ const Contact = () => {
                   <Mail className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="text-sm text-muted-foreground">{t('contact.emailUs')}</p>
                   <p className="font-medium group-hover:text-primary transition-colors">cherchiscafeandbook@gmail.com</p>
                 </div>
               </a>
@@ -88,7 +89,7 @@ const Contact = () => {
                 className="flex items-center gap-3 px-6 py-3 bg-[#25D366]/10 text-[#25D366] rounded-full hover:bg-[#25D366]/20 transition-colors"
               >
                 <MessageCircle className="w-5 h-5" />
-                <span className="font-medium">Chat on WhatsApp</span>
+                <span className="font-medium">{t('contact.whatsApp')}</span>
               </button>
             </div>
           </motion.div>
@@ -100,41 +101,41 @@ const Contact = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <form onSubmit={handleSubmit} className="glass-card p-8 rounded-2xl">
-              <h3 className="font-serif text-2xl mb-6">Send a Message</h3>
+              <h3 className="font-serif text-2xl mb-6">{t('contact.sendMessage')}</h3>
               
               <div className="space-y-5">
                 <div>
-                  <label className="text-sm text-muted-foreground mb-2 block">Your Name</label>
+                  <label className="text-sm text-muted-foreground mb-2 block">{t('contact.name')}</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="input-field"
-                    placeholder="Enter your name"
+                    placeholder={t('contact.namePlaceholder')}
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-muted-foreground mb-2 block">Email</label>
+                  <label className="text-sm text-muted-foreground mb-2 block">{t('contact.email')}</label>
                   <input
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="input-field"
-                    placeholder="your@email.com"
+                    placeholder={t('contact.emailPlaceholder')}
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-muted-foreground mb-2 block">Message</label>
+                  <label className="text-sm text-muted-foreground mb-2 block">{t('contact.message')}</label>
                   <textarea
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="input-field min-h-[140px] resize-none"
-                    placeholder="How can we help you?"
+                    placeholder={t('contact.messagePlaceholder')}
                   />
                 </div>
 
@@ -144,10 +145,10 @@ const Contact = () => {
                   className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    'Sending...'
+                    t('contact.sending')
                   ) : (
                     <>
-                      Send Message
+                      {t('contact.send')}
                       <Send className="w-4 h-4" />
                     </>
                   )}
