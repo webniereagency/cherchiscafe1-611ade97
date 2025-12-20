@@ -50,11 +50,18 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
 
   const totalPrice = consolidatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  // Format order items for email
+  // Format order items for email (HTML format for better display)
   const formatOrderItems = () => {
     return consolidatedItems
-      .map(item => `${item.quantity}× ${item.name} — ${item.price * item.quantity} ETB`)
-      .join('\n');
+      .map(item => `${item.quantity}x ${item.name} - ${item.price * item.quantity} ETB`)
+      .join('<br>');
+  };
+
+  // Format order items as plain text
+  const formatOrderItemsText = () => {
+    return consolidatedItems
+      .map(item => `${item.quantity}x ${item.name} - ${item.price * item.quantity} ETB`)
+      .join(', ');
   };
 
   // Get current date formatted
@@ -73,15 +80,19 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
     e.preventDefault();
     setIsSubmitting(true);
 
+    const orderItemsFormatted = formatOrderItems();
+    const orderItemsText = formatOrderItemsText();
+
     const emailParams = {
-      customer_name: formData.name,
-      customer_email: formData.email,
-      customer_phone: formData.phone,
+      customer_name: formData.name || 'Guest',
+      customer_email: formData.email || '',
+      customer_phone: formData.phone || 'Not provided',
       order_type: formData.orderType === 'dine-in' ? 'Dine-In' : 'Order Ahead',
       preferred_time: formData.preferredTime || 'Not specified',
       special_notes: formData.notes || 'None',
-      order_items: formatOrderItems(),
-      total_price: `${totalPrice} ETB`,
+      order_items: orderItemsFormatted,
+      order_items_text: orderItemsText,
+      total_price: totalPrice.toString(),
       order_date: getOrderDate(),
     };
 
