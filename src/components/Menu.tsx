@@ -1,78 +1,111 @@
 import { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
-// Import food images
-import waffles from '@/assets/waffles.png';
-import espresso from '@/assets/espresso.png';
-import oatmeal from '@/assets/oatmeal.png';
-import icedLatte from '@/assets/iced-latte.png';
-import coffeeCupBrand from '@/assets/coffee-cup-brand.png';
+// Import real menu images
+import espressoImg from '@/assets/menu/espresso.jpg';
+import macchiatoImg from '@/assets/menu/macchiato.jpg';
+import americanoImg from '@/assets/menu/americano.jpg';
+import cappuccinoImg from '@/assets/menu/cappuccino.jpg';
+import latteImg from '@/assets/menu/latte.jpg';
+import mochaImg from '@/assets/menu/mocha.jpg';
+import icedLatteImg from '@/assets/menu/iced-latte.jpg';
+import icedAmericanoImg from '@/assets/menu/iced-americano.jpg';
+import coldBrewImg from '@/assets/menu/cold-brew.jpg';
+import freshJuiceImg from '@/assets/menu/fresh-juice.jpg';
+import blackTeaImg from '@/assets/menu/black-tea.jpg';
+import greenTeaImg from '@/assets/menu/green-tea.jpg';
+import chaiLatteImg from '@/assets/menu/chai-latte.jpg';
+import jebenaCoffeeImg from '@/assets/menu/jebena-coffee.jpg';
+import honeyLatteImg from '@/assets/menu/honey-latte.jpg';
+import spicedMochaImg from '@/assets/menu/spiced-mocha.jpg';
+import cheeseCroissantsImg from '@/assets/menu/cheese-croissants.jpg';
+import wafflesImg from '@/assets/menu/waffles.jpg';
+import wrapsImg from '@/assets/menu/wraps.jpg';
+import oatmealImg from '@/assets/menu/oatmeal.jpg';
+import grilledCheeseImg from '@/assets/menu/grilled-cheese.jpg';
+import avocadoToastImg from '@/assets/menu/avocado-toast.jpg';
+import omeletImg from '@/assets/menu/omelet.jpg';
+import frenchToastImg from '@/assets/menu/french-toast.jpg';
+import plainCroissantsImg from '@/assets/menu/plain-croissants.jpg';
+import pastriesImg from '@/assets/menu/pastries.jpg';
 
 export interface MenuItem {
   id: string;
+  nameKey: string;
   name: string;
   price: number;
   category: string;
+  categoryKey: string;
   image: string;
+  descriptionKey: string;
   description: string;
 }
 
 const menuData: MenuItem[] = [
   // Breakfast & Food
-  { id: 'cheese-croissants', name: 'Cheese Croissants', price: 250, category: 'Breakfast & Pastries', image: waffles, description: 'Buttery, flaky croissants filled with melted cheese. Perfect with your morning coffee.' },
-  { id: 'waffles-half', name: 'Waffles Basic (Half)', price: 120, category: 'Breakfast & Pastries', image: waffles, description: 'Light and crispy Belgian-style waffle. Just right for a light bite.' },
-  { id: 'waffles-full', name: 'Waffles Basic (Full)', price: 250, category: 'Breakfast & Pastries', image: waffles, description: 'Full portion of our signature crispy waffles, golden and delicious.' },
-  { id: 'wraps', name: 'Wraps (Cheese/Beef/Chicken)', price: 250, category: 'Breakfast & Pastries', image: oatmeal, description: 'Warm tortilla wraps with your choice of melted cheese, seasoned beef, or grilled chicken.' },
-  { id: 'oatmeal', name: 'Oatmeal Fruit & Honey', price: 250, category: 'Breakfast & Pastries', image: oatmeal, description: 'Creamy oatmeal topped with fresh seasonal fruits and a drizzle of Ethiopian honey.' },
-  { id: 'grilled-cheese', name: 'Grilled Cheese', price: 180, category: 'Breakfast & Pastries', image: oatmeal, description: 'Classic comfort food—golden toasted bread with melted cheese inside.' },
-  { id: 'avocado-toast', name: 'Avocado Toast', price: 180, category: 'Breakfast & Pastries', image: oatmeal, description: 'Fresh smashed avocado on artisan brown bread, seasoned to perfection.' },
-  { id: 'avocado-toast-omelet', name: 'Avocado Toast with Omelet', price: 320, category: 'Breakfast & Pastries', image: oatmeal, description: 'Our avocado toast elevated with a fluffy, golden omelet.' },
-  { id: 'cheese-omelet', name: 'Cheese Omelet with Veggies', price: 300, category: 'Breakfast & Pastries', image: oatmeal, description: 'Fluffy eggs folded with melted cheese and fresh garden vegetables.' },
-  { id: 'omelet-veggies', name: 'Omelet with Veggies', price: 250, category: 'Breakfast & Pastries', image: oatmeal, description: 'Light and healthy omelet loaded with colorful vegetables.' },
-  { id: 'french-toast-fruits', name: 'French Toast with Fruits', price: 250, category: 'Breakfast & Pastries', image: waffles, description: 'Golden French toast topped with fresh fruits—a sweet start to your day.' },
-  { id: 'french-toast-cheese', name: 'French Toast with Cheese', price: 280, category: 'Breakfast & Pastries', image: waffles, description: 'Savory twist on a classic—French toast with melted cheese.' },
-  { id: 'plain-croissants', name: 'Plain Croissants', price: 150, category: 'Breakfast & Pastries', image: waffles, description: 'Classic butter croissant, perfectly flaky and fresh from the oven.' },
-  { id: 'pastries', name: 'Seasonal Pastries', price: 150, category: 'Breakfast & Pastries', image: waffles, description: 'Our daily selection of fresh-baked pastries. Ask what\'s special today.' },
+  { id: 'cheese-croissants', nameKey: 'menu.cheeseCroissants', name: 'Cheese Croissants', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: cheeseCroissantsImg, descriptionKey: 'menu.cheeseCroissantsDesc', description: 'Buttery, flaky croissants filled with melted cheese. Perfect with your morning coffee.' },
+  { id: 'waffles-half', nameKey: 'menu.wafflesHalf', name: 'Waffles Basic (Half)', price: 120, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: wafflesImg, descriptionKey: 'menu.wafflesHalfDesc', description: 'Light and crispy Belgian-style waffle. Just right for a light bite.' },
+  { id: 'waffles-full', nameKey: 'menu.wafflesFull', name: 'Waffles Basic (Full)', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: wafflesImg, descriptionKey: 'menu.wafflesFullDesc', description: 'Full portion of our signature crispy waffles, golden and delicious.' },
+  { id: 'wraps', nameKey: 'menu.wraps', name: 'Wraps (Cheese/Beef/Chicken)', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: wrapsImg, descriptionKey: 'menu.wrapsDesc', description: 'Warm tortilla wraps with your choice of melted cheese, seasoned beef, or grilled chicken.' },
+  { id: 'oatmeal', nameKey: 'menu.oatmeal', name: 'Oatmeal Fruit & Honey', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: oatmealImg, descriptionKey: 'menu.oatmealDesc', description: 'Creamy oatmeal topped with fresh seasonal fruits and a drizzle of Ethiopian honey.' },
+  { id: 'grilled-cheese', nameKey: 'menu.grilledCheese', name: 'Grilled Cheese', price: 180, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: grilledCheeseImg, descriptionKey: 'menu.grilledCheeseDesc', description: 'Classic comfort food—golden toasted bread with melted cheese inside.' },
+  { id: 'avocado-toast', nameKey: 'menu.avocadoToast', name: 'Avocado Toast', price: 180, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: avocadoToastImg, descriptionKey: 'menu.avocadoToastDesc', description: 'Fresh smashed avocado on artisan brown bread, seasoned to perfection.' },
+  { id: 'avocado-toast-omelet', nameKey: 'menu.avocadoToastOmelet', name: 'Avocado Toast with Omelet', price: 320, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: avocadoToastImg, descriptionKey: 'menu.avocadoToastOmeletDesc', description: 'Our avocado toast elevated with a fluffy, golden omelet.' },
+  { id: 'cheese-omelet', nameKey: 'menu.cheeseOmelet', name: 'Cheese Omelet with Veggies', price: 300, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: omeletImg, descriptionKey: 'menu.cheeseOmeletDesc', description: 'Fluffy eggs folded with melted cheese and fresh garden vegetables.' },
+  { id: 'omelet-veggies', nameKey: 'menu.omeletVeggies', name: 'Omelet with Veggies', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: omeletImg, descriptionKey: 'menu.omeletVeggiesDesc', description: 'Light and healthy omelet loaded with colorful vegetables.' },
+  { id: 'french-toast-fruits', nameKey: 'menu.frenchToastFruits', name: 'French Toast with Fruits', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastImg, descriptionKey: 'menu.frenchToastFruitsDesc', description: 'Golden French toast topped with fresh fruits—a sweet start to your day.' },
+  { id: 'french-toast-cheese', nameKey: 'menu.frenchToastCheese', name: 'French Toast with Cheese', price: 280, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastImg, descriptionKey: 'menu.frenchToastCheeseDesc', description: 'Savory twist on a classic—French toast with melted cheese.' },
+  { id: 'plain-croissants', nameKey: 'menu.plainCroissants', name: 'Plain Croissants', price: 150, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: plainCroissantsImg, descriptionKey: 'menu.plainCroissantsDesc', description: 'Classic butter croissant, perfectly flaky and fresh from the oven.' },
+  { id: 'pastries', nameKey: 'menu.pastries', name: 'Seasonal Pastries', price: 150, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: pastriesImg, descriptionKey: 'menu.pastriesDesc', description: 'Our daily selection of fresh-baked pastries. Ask what\'s special today.' },
   
   // Coffee
-  { id: 'espresso', name: 'Espresso', price: 45, category: 'Coffee', image: espresso, description: 'Bold, rich single shot of our house-roasted Ethiopian beans.' },
-  { id: 'macchiato', name: 'Macchiato', price: 55, category: 'Coffee', image: espresso, description: 'Espresso "marked" with a touch of foamed milk.' },
-  { id: 'americano', name: 'Americano', price: 60, category: 'Coffee', image: espresso, description: 'Smooth espresso diluted with hot water for a longer, gentler coffee.' },
-  { id: 'cappuccino', name: 'Cappuccino', price: 75, category: 'Coffee', image: coffeeCupBrand, description: 'Classic Italian-style with equal parts espresso, steamed milk, and foam.' },
-  { id: 'latte', name: 'Caffè Latte', price: 80, category: 'Coffee', image: coffeeCupBrand, description: 'Silky smooth espresso with steamed milk and light foam.' },
-  { id: 'mocha', name: 'Mocha', price: 90, category: 'Coffee', image: coffeeCupBrand, description: 'Rich espresso meets chocolate, topped with steamed milk.' },
+  { id: 'espresso', nameKey: 'menu.espresso', name: 'Espresso', price: 45, category: 'Coffee', categoryKey: 'menu.category.coffee', image: espressoImg, descriptionKey: 'menu.espressoDesc', description: 'Bold, rich single shot of our house-roasted Ethiopian beans.' },
+  { id: 'macchiato', nameKey: 'menu.macchiato', name: 'Macchiato', price: 55, category: 'Coffee', categoryKey: 'menu.category.coffee', image: macchiatoImg, descriptionKey: 'menu.macchiatoDesc', description: 'Espresso "marked" with a touch of foamed milk.' },
+  { id: 'americano', nameKey: 'menu.americano', name: 'Americano', price: 60, category: 'Coffee', categoryKey: 'menu.category.coffee', image: americanoImg, descriptionKey: 'menu.americanoDesc', description: 'Smooth espresso diluted with hot water for a longer, gentler coffee.' },
+  { id: 'cappuccino', nameKey: 'menu.cappuccino', name: 'Cappuccino', price: 75, category: 'Coffee', categoryKey: 'menu.category.coffee', image: cappuccinoImg, descriptionKey: 'menu.cappuccinoDesc', description: 'Classic Italian-style with equal parts espresso, steamed milk, and foam.' },
+  { id: 'latte', nameKey: 'menu.latte', name: 'Caffè Latte', price: 80, category: 'Coffee', categoryKey: 'menu.category.coffee', image: latteImg, descriptionKey: 'menu.latteDesc', description: 'Silky smooth espresso with steamed milk and light foam.' },
+  { id: 'mocha', nameKey: 'menu.mocha', name: 'Mocha', price: 90, category: 'Coffee', categoryKey: 'menu.category.coffee', image: mochaImg, descriptionKey: 'menu.mochaDesc', description: 'Rich espresso meets chocolate, topped with steamed milk.' },
   
   // Cold Drinks
-  { id: 'iced-latte', name: 'Iced Latte', price: 90, category: 'Cold Drinks', image: icedLatte, description: 'Chilled espresso with cold milk over ice—refreshing and smooth.' },
-  { id: 'iced-americano', name: 'Iced Americano', price: 70, category: 'Cold Drinks', image: icedLatte, description: 'Bold espresso over ice with cold water. Crisp and invigorating.' },
-  { id: 'cold-brew', name: 'Cold Brew', price: 85, category: 'Cold Drinks', image: icedLatte, description: '12-hour steeped coffee, naturally sweet with low acidity.' },
-  { id: 'fresh-juice', name: 'Fresh Juice', price: 80, category: 'Cold Drinks', image: icedLatte, description: 'Daily selection of freshly squeezed fruit juices.' },
+  { id: 'iced-latte', nameKey: 'menu.icedLatte', name: 'Iced Latte', price: 90, category: 'Cold Drinks', categoryKey: 'menu.category.coldDrinks', image: icedLatteImg, descriptionKey: 'menu.icedLatteDesc', description: 'Chilled espresso with cold milk over ice—refreshing and smooth.' },
+  { id: 'iced-americano', nameKey: 'menu.icedAmericano', name: 'Iced Americano', price: 70, category: 'Cold Drinks', categoryKey: 'menu.category.coldDrinks', image: icedAmericanoImg, descriptionKey: 'menu.icedAmericanoDesc', description: 'Bold espresso over ice with cold water. Crisp and invigorating.' },
+  { id: 'cold-brew', nameKey: 'menu.coldBrew', name: 'Cold Brew', price: 85, category: 'Cold Drinks', categoryKey: 'menu.category.coldDrinks', image: coldBrewImg, descriptionKey: 'menu.coldBrewDesc', description: '12-hour steeped coffee, naturally sweet with low acidity.' },
+  { id: 'fresh-juice', nameKey: 'menu.freshJuice', name: 'Fresh Juice', price: 80, category: 'Cold Drinks', categoryKey: 'menu.category.coldDrinks', image: freshJuiceImg, descriptionKey: 'menu.freshJuiceDesc', description: 'Daily selection of freshly squeezed fruit juices.' },
   
   // Tea
-  { id: 'black-tea', name: 'Black Tea', price: 40, category: 'Tea', image: coffeeCupBrand, description: 'Traditional Ethiopian black tea, bold and warming.' },
-  { id: 'green-tea', name: 'Green Tea', price: 45, category: 'Tea', image: coffeeCupBrand, description: 'Light and refreshing green tea with natural antioxidants.' },
-  { id: 'chai-latte', name: 'Chai Latte', price: 75, category: 'Tea', image: coffeeCupBrand, description: 'Spiced tea blended with steamed milk—aromatic and comforting.' },
+  { id: 'black-tea', nameKey: 'menu.blackTea', name: 'Black Tea', price: 40, category: 'Tea', categoryKey: 'menu.category.tea', image: blackTeaImg, descriptionKey: 'menu.blackTeaDesc', description: 'Traditional Ethiopian black tea, bold and warming.' },
+  { id: 'green-tea', nameKey: 'menu.greenTea', name: 'Green Tea', price: 45, category: 'Tea', categoryKey: 'menu.category.tea', image: greenTeaImg, descriptionKey: 'menu.greenTeaDesc', description: 'Light and refreshing green tea with natural antioxidants.' },
+  { id: 'chai-latte', nameKey: 'menu.chaiLatte', name: 'Chai Latte', price: 75, category: 'Tea', categoryKey: 'menu.category.tea', image: chaiLatteImg, descriptionKey: 'menu.chaiLatteDesc', description: 'Spiced tea blended with steamed milk—aromatic and comforting.' },
   
   // Special Drinks
-  { id: 'jebena-coffee', name: 'Jebena Coffee', price: 100, category: 'House Specials', image: coffeeCupBrand, description: 'Traditional Ethiopian coffee ceremony style—roasted, ground, and brewed in a clay pot.' },
-  { id: 'honey-latte', name: 'Honey Latte', price: 95, category: 'House Specials', image: coffeeCupBrand, description: 'Our signature latte sweetened with local Ethiopian honey.' },
-  { id: 'spiced-mocha', name: 'Spiced Mocha', price: 100, category: 'House Specials', image: coffeeCupBrand, description: 'Ethiopian spices meet rich chocolate and espresso—uniquely Cherish.' },
+  { id: 'jebena-coffee', nameKey: 'menu.jebenaCoffee', name: 'Jebena Coffee', price: 100, category: 'House Specials', categoryKey: 'menu.category.specials', image: jebenaCoffeeImg, descriptionKey: 'menu.jebenaCoffeeDesc', description: 'Traditional Ethiopian coffee ceremony style—roasted, ground, and brewed in a clay pot.' },
+  { id: 'honey-latte', nameKey: 'menu.honeyLatte', name: 'Honey Latte', price: 95, category: 'House Specials', categoryKey: 'menu.category.specials', image: honeyLatteImg, descriptionKey: 'menu.honeyLatteDesc', description: 'Our signature latte sweetened with local Ethiopian honey.' },
+  { id: 'spiced-mocha', nameKey: 'menu.spicedMocha', name: 'Spiced Mocha', price: 100, category: 'House Specials', categoryKey: 'menu.category.specials', image: spicedMochaImg, descriptionKey: 'menu.spicedMochaDesc', description: 'Ethiopian spices meet rich chocolate and espresso—uniquely Cherish.' },
 ];
 
-const categories = ['All', 'Breakfast & Pastries', 'Coffee', 'Cold Drinks', 'Tea', 'House Specials'];
+const categoryKeys = [
+  { key: 'all', label: 'All', categoryKey: 'menu.category.all' },
+  { key: 'Breakfast & Pastries', label: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast' },
+  { key: 'Coffee', label: 'Coffee', categoryKey: 'menu.category.coffee' },
+  { key: 'Cold Drinks', label: 'Cold Drinks', categoryKey: 'menu.category.coldDrinks' },
+  { key: 'Tea', label: 'Tea', categoryKey: 'menu.category.tea' },
+  { key: 'House Specials', label: 'House Specials', categoryKey: 'menu.category.specials' },
+];
 
 interface MenuProps {
   onOrderItem: (item: MenuItem) => void;
 }
 
 const Menu = ({ onOrderItem }: MenuProps) => {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('all');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
-  const filteredItems = activeCategory === 'All' 
+  const filteredItems = activeCategory === 'all' 
     ? menuData 
     : menuData.filter(item => item.category === activeCategory);
 
@@ -86,14 +119,14 @@ const Menu = ({ onOrderItem }: MenuProps) => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <span className="text-sm uppercase tracking-[0.2em] text-primary">Our Menu</span>
+          <span className="text-sm uppercase tracking-[0.2em] text-primary">{t('menu.subtitle')}</span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mt-4 mb-6">
-            Carefully Crafted
-            <span className="text-primary italic"> For You</span>
+            {t('menu.title')}
+            <span className="text-primary italic"> {t('menu.titleHighlight')}</span>
           </h2>
           <div className="accent-line mb-6" />
           <p className="text-muted-foreground">
-            From traditional Ethiopian coffee to signature breakfast items, every item is made with care.
+            {t('menu.description')}
           </p>
         </motion.div>
 
@@ -104,17 +137,17 @@ const Menu = ({ onOrderItem }: MenuProps) => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {categories.map((category) => (
+          {categoryKeys.map((cat) => (
             <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
+              key={cat.key}
+              onClick={() => setActiveCategory(cat.key)}
               className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeCategory === category
+                activeCategory === cat.key
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
-              {category}
+              {t(cat.categoryKey)}
             </button>
           ))}
         </motion.div>
@@ -141,13 +174,13 @@ const Menu = ({ onOrderItem }: MenuProps) => {
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={t(item.nameKey)}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
                 <div className="p-5">
-                  <p className="text-xs uppercase tracking-wider text-primary mb-1">{item.category}</p>
-                  <h3 className="font-serif text-lg mb-2">{item.name}</h3>
+                  <p className="text-xs uppercase tracking-wider text-primary mb-1">{t(item.categoryKey)}</p>
+                  <h3 className="font-serif text-lg mb-2">{t(item.nameKey)}</h3>
                   <p className="text-xl font-medium text-accent">{item.price} ETB</p>
                 </div>
               </motion.div>
@@ -177,6 +210,7 @@ interface MenuItemModalProps {
 }
 
 const MenuItemModal = ({ item, onClose, onOrder }: MenuItemModalProps) => {
+  const { t } = useLanguage();
   const [quantity, setQuantity] = useState(1);
 
   const handleOrder = () => {
@@ -222,7 +256,7 @@ const MenuItemModal = ({ item, onClose, onOrder }: MenuItemModalProps) => {
         <div className="aspect-video relative overflow-hidden">
           <img
             src={item.image}
-            alt={item.name}
+            alt={t(item.nameKey)}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
@@ -230,9 +264,9 @@ const MenuItemModal = ({ item, onClose, onOrder }: MenuItemModalProps) => {
 
         {/* Content */}
         <div className="p-6 -mt-8 relative">
-          <span className="text-xs uppercase tracking-wider text-primary">{item.category}</span>
-          <h3 className="font-serif text-2xl md:text-3xl mt-2 mb-3">{item.name}</h3>
-          <p className="text-muted-foreground mb-6">{item.description}</p>
+          <span className="text-xs uppercase tracking-wider text-primary">{t(item.categoryKey)}</span>
+          <h3 className="font-serif text-2xl md:text-3xl mt-2 mb-3">{t(item.nameKey)}</h3>
+          <p className="text-muted-foreground mb-6">{t(item.descriptionKey)}</p>
 
           <div className="flex items-center justify-between mb-6">
             <p className="text-2xl font-medium text-accent">{item.price} ETB</p>
@@ -259,7 +293,7 @@ const MenuItemModal = ({ item, onClose, onOrder }: MenuItemModalProps) => {
             onClick={handleOrder}
             className="w-full btn-primary text-center"
           >
-            Add to Order — {item.price * quantity} ETB
+            {t('menu.addToOrder')} — {item.price * quantity} ETB
           </button>
         </div>
       </motion.div>
