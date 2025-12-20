@@ -29,6 +29,27 @@ const Reviews = () => {
       textKey: 'reviews.r3',
       rating: 5,
       date: "3 weeks ago"
+    },
+    {
+      nameKey: 'reviews.r4Author',
+      roleKey: 'reviews.r4Role',
+      textKey: 'reviews.r4',
+      rating: 5,
+      date: "1 week ago"
+    },
+    {
+      nameKey: 'reviews.r5Author',
+      roleKey: 'reviews.r5Role',
+      textKey: 'reviews.r5',
+      rating: 4,
+      date: "2 months ago"
+    },
+    {
+      nameKey: 'reviews.r6Author',
+      roleKey: 'reviews.r6Role',
+      textKey: 'reviews.r6',
+      rating: 5,
+      date: "5 days ago"
     }
   ];
 
