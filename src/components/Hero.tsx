@@ -17,22 +17,32 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Start playing as soon as enough data is available
-    const handleCanPlay = () => {
+    // Show the video as soon as the first frame is available (earlier than `canplay`).
+    const handleLoadedData = () => {
       setVideoLoaded(true);
       video.play().catch(() => {
-        // Autoplay might be blocked, that's okay
+        // Autoplay might be blocked, that's okay.
       });
     };
 
+    // Fallback for some browsers/cases.
+    const handleCanPlay = () => {
+      setVideoLoaded(true);
+      video.play().catch(() => {
+        // Autoplay might be blocked, that's okay.
+      });
+    };
+
+    video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('canplay', handleCanPlay);
-    
+
     // If video is already ready (cached)
-    if (video.readyState >= 3) {
-      handleCanPlay();
+    if (video.readyState >= 2) {
+      handleLoadedData();
     }
 
     return () => {
+      video.removeEventListener('loadeddata', handleLoadedData);
       video.removeEventListener('canplay', handleCanPlay);
     };
   }, []);
@@ -54,7 +64,7 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="w-full h-full object-cover"
         >
           <source src="/hero-mobile.mp4" type="video/mp4" />
