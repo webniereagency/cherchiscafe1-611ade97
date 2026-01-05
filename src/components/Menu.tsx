@@ -26,8 +26,11 @@ import wrapsImg from '@/assets/menu/wraps.jpg';
 import oatmealImg from '@/assets/menu/oatmeal.jpg';
 import grilledCheeseImg from '@/assets/menu/grilled-cheese.jpg';
 import avocadoToastImg from '@/assets/menu/avocado-toast.jpg';
-import omeletImg from '@/assets/menu/omelet.jpg';
-import frenchToastImg from '@/assets/menu/french-toast.jpg';
+import avocadoToastOmeletImg from '@/assets/menu/avocado-toast-omelet.jpg';
+import cheeseOmeletImg from '@/assets/menu/cheese-omelet.jpg';
+import veggieOmeletImg from '@/assets/menu/veggie-omelet.jpg';
+import frenchToastFruitsImg from '@/assets/menu/french-toast-fruits.jpg';
+import frenchToastCheeseImg from '@/assets/menu/french-toast-cheese.jpg';
 import plainCroissantsImg from '@/assets/menu/plain-croissants.jpg';
 import pastriesImg from '@/assets/menu/pastries.jpg';
 
@@ -52,11 +55,11 @@ const menuData: MenuItem[] = [
   { id: 'oatmeal', nameKey: 'menu.oatmeal', name: 'Oatmeal Fruit & Honey', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: oatmealImg, descriptionKey: 'menu.oatmealDesc', description: 'Creamy oatmeal topped with fresh seasonal fruits and a drizzle of Ethiopian honey.' },
   { id: 'grilled-cheese', nameKey: 'menu.grilledCheese', name: 'Grilled Cheese', price: 180, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: grilledCheeseImg, descriptionKey: 'menu.grilledCheeseDesc', description: 'Classic comfort food—golden toasted bread with melted cheese inside.' },
   { id: 'avocado-toast', nameKey: 'menu.avocadoToast', name: 'Avocado Toast', price: 180, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: avocadoToastImg, descriptionKey: 'menu.avocadoToastDesc', description: 'Fresh smashed avocado on artisan brown bread, seasoned to perfection.' },
-  { id: 'avocado-toast-omelet', nameKey: 'menu.avocadoToastOmelet', name: 'Avocado Toast with Omelet', price: 320, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: avocadoToastImg, descriptionKey: 'menu.avocadoToastOmeletDesc', description: 'Our avocado toast elevated with a fluffy, golden omelet.' },
-  { id: 'cheese-omelet', nameKey: 'menu.cheeseOmelet', name: 'Cheese Omelet with Veggies', price: 300, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: omeletImg, descriptionKey: 'menu.cheeseOmeletDesc', description: 'Fluffy eggs folded with melted cheese and fresh garden vegetables.' },
-  { id: 'omelet-veggies', nameKey: 'menu.omeletVeggies', name: 'Omelet with Veggies', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: omeletImg, descriptionKey: 'menu.omeletVeggiesDesc', description: 'Light and healthy omelet loaded with colorful vegetables.' },
-  { id: 'french-toast-fruits', nameKey: 'menu.frenchToastFruits', name: 'French Toast with Fruits', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastImg, descriptionKey: 'menu.frenchToastFruitsDesc', description: 'Golden French toast topped with fresh fruits—a sweet start to your day.' },
-  { id: 'french-toast-cheese', nameKey: 'menu.frenchToastCheese', name: 'French Toast with Cheese', price: 280, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastImg, descriptionKey: 'menu.frenchToastCheeseDesc', description: 'Savory twist on a classic—French toast with melted cheese.' },
+  { id: 'avocado-toast-omelet', nameKey: 'menu.avocadoToastOmelet', name: 'Avocado Toast with Omelet', price: 320, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: avocadoToastOmeletImg, descriptionKey: 'menu.avocadoToastOmeletDesc', description: 'Our avocado toast elevated with a fluffy, golden omelet.' },
+  { id: 'cheese-omelet', nameKey: 'menu.cheeseOmelet', name: 'Cheese Omelet with Veggies', price: 300, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: cheeseOmeletImg, descriptionKey: 'menu.cheeseOmeletDesc', description: 'Fluffy eggs folded with melted cheese and fresh garden vegetables.' },
+  { id: 'omelet-veggies', nameKey: 'menu.omeletVeggies', name: 'Omelet with Veggies', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: veggieOmeletImg, descriptionKey: 'menu.omeletVeggiesDesc', description: 'Light and healthy omelet loaded with colorful vegetables.' },
+  { id: 'french-toast-fruits', nameKey: 'menu.frenchToastFruits', name: 'French Toast with Fruits', price: 250, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastFruitsImg, descriptionKey: 'menu.frenchToastFruitsDesc', description: 'Golden French toast topped with fresh fruits—a sweet start to your day.' },
+  { id: 'french-toast-cheese', nameKey: 'menu.frenchToastCheese', name: 'French Toast with Cheese', price: 280, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: frenchToastCheeseImg, descriptionKey: 'menu.frenchToastCheeseDesc', description: 'Savory twist on a classic—French toast with melted cheese.' },
   { id: 'plain-croissants', nameKey: 'menu.plainCroissants', name: 'Plain Croissants', price: 150, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: plainCroissantsImg, descriptionKey: 'menu.plainCroissantsDesc', description: 'Classic butter croissant, perfectly flaky and fresh from the oven.' },
   { id: 'pastries', nameKey: 'menu.pastries', name: 'Seasonal Pastries', price: 150, category: 'Breakfast & Pastries', categoryKey: 'menu.category.breakfast', image: pastriesImg, descriptionKey: 'menu.pastriesDesc', description: 'Our daily selection of fresh-baked pastries. Ask what\'s special today.' },
   
