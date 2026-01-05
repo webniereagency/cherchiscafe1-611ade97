@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
-import heroFallback from '@/assets/hero-fallback.png';
 
 interface HeroProps {
   onExploreMenu: () => void;
@@ -49,12 +48,8 @@ const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background - Image fallback that shows immediately while video loads */}
-      <img 
-        src={heroFallback} 
-        alt="" 
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* Background - Black fallback that shows immediately while video loads */}
+      <div className="absolute inset-0 bg-black" />
       
       {/* Background Video */}
       <div className={`absolute inset-0 transition-opacity duration-700 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}>
