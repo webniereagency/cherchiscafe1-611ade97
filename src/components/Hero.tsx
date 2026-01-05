@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -8,17 +9,47 @@ interface HeroProps {
 
 const Hero = ({ onExploreMenu, onOrderAhead }: HeroProps) => {
   const { t } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Start playing as soon as enough data is available
+    const handleCanPlay = () => {
+      setVideoLoaded(true);
+      video.play().catch(() => {
+        // Autoplay might be blocked, that's okay
+      });
+    };
+
+    video.addEventListener('canplay', handleCanPlay);
+    
+    // If video is already ready (cached)
+    if (video.readyState >= 3) {
+      handleCanPlay();
+    }
+
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+    };
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background - Dark fallback that shows immediately */}
+      <div className="absolute inset-0 bg-[#1a1614]" />
+      
       {/* Background Video */}
-      <div className="absolute inset-0">
+      <div className={`absolute inset-0 transition-opacity duration-700 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           className="w-full h-full object-cover"
         >
           <source src="/hero-mobile.mp4" type="video/mp4" />
