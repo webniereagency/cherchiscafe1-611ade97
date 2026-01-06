@@ -31,6 +31,8 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
   const [step, setStep] = useState<'cart' | 'details' | 'payment' | 'confirmation'>('cart');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [checkoutUrl, setCheckoutUrl] = useState('');
   const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
@@ -78,6 +80,8 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
   // Initiate Chapa payment
   const handlePaymentComplete = async () => {
     setIsSubmitting(true);
+    setPaymentError('');
+    setCheckoutUrl('');
     
     // Generate unique transaction reference
     const txRef = `cherish-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -96,6 +100,7 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
     localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(draft));
 
     try {
+      console.log('Initiating Chapa payment...');
       const response = await fetch('/.netlify/functions/chapa-initiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -114,21 +119,27 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
       console.log('Chapa initiate response:', data);
 
       if (data.status === 'success' && data.checkout_url) {
+        console.log('Redirecting to:', data.checkout_url);
+        setCheckoutUrl(data.checkout_url);
         // Redirect to Chapa checkout page
         window.location.href = data.checkout_url;
       } else {
+        const errorMsg = data.error || 'Could not start payment. Please try again.';
+        setPaymentError(errorMsg);
         toast({
           title: 'Payment Error',
-          description: data.error || 'Could not start payment. Please try again.',
+          description: errorMsg,
           variant: 'destructive'
         });
         setIsSubmitting(false);
       }
     } catch (error) {
       console.error('Chapa payment error:', error);
+      const errorMsg = 'Could not connect to payment service. Please try again.';
+      setPaymentError(errorMsg);
       toast({
         title: 'Connection Error',
-        description: 'Could not connect to payment service. Please try again.',
+        description: errorMsg,
         variant: 'destructive'
       });
       setIsSubmitting(false);
@@ -336,6 +347,8 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
                 formData={formData}
                 onPaymentComplete={handlePaymentComplete}
                 isSubmitting={isSubmitting}
+                paymentError={paymentError}
+                checkoutUrl={checkoutUrl}
                 t={t}
               />
             )}
@@ -734,6 +747,8 @@ const PaymentStep = ({
   formData,
   onPaymentComplete,
   isSubmitting,
+  paymentError,
+  checkoutUrl,
   t
 }: {
   items: OrderItem[];
@@ -741,10 +756,50 @@ const PaymentStep = ({
   formData: any;
   onPaymentComplete: () => void;
   isSubmitting: boolean;
+  paymentError: string;
+  checkoutUrl: string;
   t: (key: string) => string;
 }) => {
+  // Show loading/redirect state when submitting
+  if (isSubmitting) {
+    return (
+      <div className="text-center py-12 space-y-6">
+        <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+        <div>
+          <p className="text-lg font-medium">{t('order.redirectingToChapa') || 'Redirecting to Chapa payment...'}</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t('order.pleaseWait') || 'Please wait, you will be redirected shortly.'}
+          </p>
+        </div>
+        
+        {checkoutUrl && (
+          <div className="mt-8 p-4 bg-secondary/30 rounded-xl">
+            <p className="text-sm text-muted-foreground mb-3">
+              {t('order.notRedirected') || "If you're not redirected automatically:"}
+            </p>
+            <a 
+              href={checkoutUrl}
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              <CreditCard className="w-4 h-4" />
+              {t('order.clickToPay') || 'Click here to pay'}
+            </a>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {/* Payment Error */}
+      {paymentError && (
+        <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-xl text-center">
+          <p className="text-destructive font-medium">{t('order.paymentError') || 'Payment Error'}</p>
+          <p className="text-sm text-muted-foreground mt-1">{paymentError}</p>
+        </div>
+      )}
+
       {/* Order Summary */}
       <div className="p-4 bg-secondary/30 rounded-xl">
         <p className="text-sm text-muted-foreground mb-3">{t('order.orderSummary')}</p>
