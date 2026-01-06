@@ -1,73 +1,60 @@
-# Welcome to your Lovable project
+# Cherish Addis Coffee & Books
 
-## Project info
+A cozy cafe website for Cherish Addis Coffee & Books, located behind Abrehot Library in 4 Kilo, Addis Ababa, Ethiopia.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## About
 
-## How can I edit this code?
+Cherish Addis is a quiet space for coffee, books, and meaningful moments. This website showcases our menu, atmosphere, location, and allows customers to connect with us.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- Responsive design optimized for all devices
+- Bilingual support (English & Amharic)
+- Interactive menu with categories
+- Contact form integration
+- Location with Google Maps
+- Customer reviews section
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
 
-**Use your preferred IDE**
+## Development
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or bun
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+### Installation
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Run Development Server
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Build for Production
+```sh
+npm run build
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Deployment
 
-**Use GitHub Codespaces**
+This site is hosted on Netlify. The `public/_redirects` file handles SPA routing.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Netlify Settings
+- **Build command:** `npm run build`
+- **Publish directory:** `dist`
 
-## What technologies are used for this project?
+## Contact
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Email:** cherchiscafeandbook@gmail.com
+- **Phone:** +251 927 957 171
+- **Location:** Behind Abrehot Library, 4 Kilo, Addis Ababa, Ethiopia
