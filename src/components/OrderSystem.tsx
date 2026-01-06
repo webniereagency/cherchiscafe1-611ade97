@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, ShoppingBag, Clock, User, Mail, Phone, MessageSquare, CreditCard, Building2, Zap, CheckCircle2 } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Clock, User, Mail, Phone, MessageSquare, CreditCard, Building2, Zap, CheckCircle2, ExternalLink } from 'lucide-react';
 import { MenuItem } from './Menu';
 import { toast } from '@/hooks/use-toast';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -99,11 +99,16 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
     };
     localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(draft));
 
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
     try {
       console.log('Initiating Chapa payment...');
       const response = await fetch('/.netlify/functions/chapa-initiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           amount: totalPrice,
           email: formData.email,
@@ -115,7 +120,29 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
         })
       });
 
-      const data = await response.json();
+      clearTimeout(timeoutId);
+      console.log('Response status:', response.status);
+
+      // Parse response as text first, then try JSON
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        console.error('Non-JSON response:', responseText);
+        const errorMsg = `Payment service error (HTTP ${response.status}). Please try again.`;
+        setPaymentError(errorMsg);
+        toast({
+          title: 'Payment Error',
+          description: errorMsg,
+          variant: 'destructive'
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       console.log('Chapa initiate response:', data);
 
       if (data.status === 'success' && data.checkout_url) {
@@ -133,9 +160,15 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
         });
         setIsSubmitting(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      clearTimeout(timeoutId);
       console.error('Chapa payment error:', error);
-      const errorMsg = 'Could not connect to payment service. Please try again.';
+      
+      let errorMsg = 'Could not connect to payment service. Please try again.';
+      if (error.name === 'AbortError') {
+        errorMsg = 'Payment request timed out. Please try again.';
+      }
+      
       setPaymentError(errorMsg);
       toast({
         title: 'Connection Error',
@@ -773,17 +806,26 @@ const PaymentStep = ({
         </div>
         
         {checkoutUrl && (
-          <div className="mt-8 p-4 bg-secondary/30 rounded-xl">
-            <p className="text-sm text-muted-foreground mb-3">
+          <div className="mt-8 p-4 bg-secondary/30 rounded-xl space-y-3">
+            <p className="text-sm text-muted-foreground">
               {t('order.notRedirected') || "If you're not redirected automatically:"}
             </p>
-            <a 
-              href={checkoutUrl}
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              <CreditCard className="w-4 h-4" />
-              {t('order.clickToPay') || 'Click here to pay'}
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a 
+                href={checkoutUrl}
+                className="btn-primary inline-flex items-center justify-center gap-2"
+              >
+                <CreditCard className="w-4 h-4" />
+                {t('order.clickToPay') || 'Click here to pay'}
+              </a>
+              <button
+                onClick={() => window.open(checkoutUrl, '_blank', 'noopener,noreferrer')}
+                className="btn-secondary inline-flex items-center justify-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                {t('order.openNewTab') || 'Open in new tab'}
+              </button>
+            </div>
           </div>
         )}
       </div>
