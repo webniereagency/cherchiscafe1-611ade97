@@ -75,28 +75,64 @@ const OrderSystem = ({ isOpen, onClose, orderItems, onRemoveItem, onClearOrder }
     localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(draft));
   };
 
-  // Simulate payment completion (placeholder for real payment integration)
-  const handlePaymentComplete = () => {
-    // Save draft with payment completed flag
+  // Initiate Chapa payment
+  const handlePaymentComplete = async () => {
+    setIsSubmitting(true);
+    
+    // Generate unique transaction reference
+    const txRef = `cherish-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Save draft before redirect to Chapa
     const draft = {
       formData,
-      paymentCompleted: true,
+      orderItems: orderItems.map(item => ({ 
+        id: item.id, 
+        name: item.name, 
+        price: item.price 
+      })),
+      tx_ref: txRef,
       timestamp: Date.now()
     };
     localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify(draft));
-    
-    // Simulate payment processing delay
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setPaymentCompleted(true);
-      setStep('details');
-      setIsSubmitting(false);
-      toast({
-        title: t('order.paymentSuccess'),
-        description: t('order.paymentSuccessDesc'),
+
+    try {
+      const response = await fetch('/.netlify/functions/chapa-initiate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: totalPrice,
+          email: formData.email,
+          first_name: formData.name.split(' ')[0],
+          last_name: formData.name.split(' ').slice(1).join(' ') || formData.name,
+          phone: formData.phone,
+          tx_ref: txRef,
+          order_items: consolidatedItems.map(i => `${i.quantity}x ${i.name}`).join(', ')
+        })
       });
-      localStorage.removeItem(ORDER_DRAFT_KEY);
-    }, 1500);
+
+      const data = await response.json();
+      console.log('Chapa initiate response:', data);
+
+      if (data.status === 'success' && data.checkout_url) {
+        // Redirect to Chapa checkout page
+        window.location.href = data.checkout_url;
+      } else {
+        toast({
+          title: 'Payment Error',
+          description: data.error || 'Could not start payment. Please try again.',
+          variant: 'destructive'
+        });
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('Chapa payment error:', error);
+      toast({
+        title: 'Connection Error',
+        description: 'Could not connect to payment service. Please try again.',
+        variant: 'destructive'
+      });
+      setIsSubmitting(false);
+    }
   };
 
   // Consolidate items with quantities
